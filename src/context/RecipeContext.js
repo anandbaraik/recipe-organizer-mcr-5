@@ -5,7 +5,8 @@ const RecipeContext = createContext({
   recipeList: [],
   setRecipeList: () => {},
   deleteReciepe : () => {},
-  addReciepe: () => {}
+  addReciepe: () => {},
+  updateReciepe: () => {}
 });
 
 export const RecipeProvider = ({ children }) => {
@@ -26,13 +27,25 @@ export const RecipeProvider = ({ children }) => {
     localStorage.setItem('recipes', JSON.stringify(reciepes));
     setRecipeList(reciepes);
   }
+
+  const updateReciepe = (data) => {
+    const reciepes =  [...recipeList].map((recipe) => {
+      if(data.id === recipe.id) {
+          return {...data};
+      }
+      return recipe;
+  });
+  localStorage.setItem('recipes', JSON.stringify(reciepes));
+  setRecipeList(reciepes);
+  }
   return (
     <RecipeContext.Provider
       value={{
         recipeList,
         setRecipeList,
         deleteReciepe,
-        addReciepe
+        addReciepe,
+        updateReciepe
       }}
     >
       {children}
