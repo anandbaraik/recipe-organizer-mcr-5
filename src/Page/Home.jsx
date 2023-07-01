@@ -2,9 +2,6 @@ import React, {useState} from 'react'
 import { useRecipe } from '../context/RecipeContext';
 import RecipeCard from '../components/RecipeCard';
 import { Link } from 'react-router-dom';
-
-import Typography from '@mui/material/Typography';
-import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -13,7 +10,10 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 
 const style = {
     position: 'absolute',
@@ -29,9 +29,25 @@ const style = {
 
 const Home = () => {
     const {recipeList, addReciepe}  = useRecipe();
-
-    const [open, setModelOpen] = useState(false);
     const [recipe, setRecipe] = useState({});
+    const [searchText, setSearchText] = useState("");
+    const [filter, setFilter] = useState("name");
+    const [open, setModelOpen] = useState(false);
+
+    const searchSuggestions = recipeList?.filter(({name, ingredients, cuisine}) => {
+            if(filter === 'name') {
+                return name?.toLowerCase()?.includes(searchText.toLowerCase());
+            }
+
+            if(filter === 'ingredients') {
+                return ingredients?.toLowerCase()?.includes(searchText.toLowerCase());
+            }
+
+            if(filter === 'cuisine') {
+                return cuisine?.toLowerCase()?.includes(searchText.toLowerCase());
+            }
+        });
+
     const handleModalClose = () => {
         setModelOpen(false);
     };
@@ -67,7 +83,25 @@ const Home = () => {
     <div className='home'>
         <section className='home-section'>
             <div className="action">
-                Search & filters
+                <TextField
+                    id="outlined-required"
+                    label="Search the items you want"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                />
+                <strong>
+                    Filters:
+                </strong>
+                <FormControl>
+                    <RadioGroup
+                        row
+                        name="row-radio-buttons-group"
+                    >
+                        <FormControlLabel checked={filter === "name"} value="name" control={<Radio />} label="Name" onChange={(e) => setFilter(e.target.value)}/>
+                        <FormControlLabel checked={filter === "ingredients"} value="ingredients" control={<Radio />} label="Ingredients" onChange={(e) => setFilter(e.target.value)}/>
+                        <FormControlLabel checked={filter === "cuisine"} value="cuisine" control={<Radio />} label="Cuisine" onChange={(e) => setFilter(e.target.value)}/>
+                    </RadioGroup>
+                </FormControl>
             </div>
             <div className='container'>
                 <div>
@@ -77,12 +111,10 @@ const Home = () => {
                 </div>
                 <div className='recipies'>
                     {
-                        (recipeList?.length > 0) ? (
-                            recipeList?.map((recipe) => {
+                        (searchSuggestions?.length > 0) && (
+                            searchSuggestions?.map((recipe) => {
                                 return <RecipeCard recipe={recipe} key={recipe.id}/>
                             })
-                        ) : (
-                            <h3 className='text-center m-auto'> There is no recipe, please add some</h3>
                         )
                     }
 
