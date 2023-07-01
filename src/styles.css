@@ -1,8 +1,20 @@
 .App {
   font-family: sans-serif;
   text-align: center;
+  padding: 1rem;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.text-center {
+  text-align: center;
+}
+.m-auto {
+  margin-bottom: auto;
+  margin-top: auto;
+}
 .home-section {
   display: flex;
   flex-direction: column;
@@ -12,7 +24,15 @@
 
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.container > div {
+  display: flex;
+  justify-content: start;
   flex-wrap: wrap;
   gap: 1rem;
 }
@@ -24,7 +44,26 @@
   gap: 1rem;
 }
 
-.btn-link {
-  text-decoration: none;
-  color: inherit;
+.btn-content {
+  display: contents;
+}
+
+.spacer {
+  display: flex;
+  justify-content: space-between !important;
+}
+
+@media screen and (max-width: 680px) {
+  .container > div {
+    justify-content: center;
+  }
+
+  .spacer {
+    flex-wrap: wrap;
+    justify-content: start;
+  }
+
+  .card-width{
+    width: 300px !important;
+  }
 }
